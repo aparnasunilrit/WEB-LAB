@@ -59,7 +59,7 @@ registration.html
 </head>
 <body>
     <h2>Register Student</h2>
-    <form method="POST" action="register.php">
+    <form method="POST" action="registration.php">
         <label for="first_name">First Name:</label><br>
         <input type="text" id="first_name" name="first_name" required><br><br>
 
