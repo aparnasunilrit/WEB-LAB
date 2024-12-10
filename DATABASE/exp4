@@ -1,4 +1,4 @@
-database command:
+database student_db
 
 CREATE TABLE students (
     id INT AUTO_INCREMENT PRIMARY KEY,
