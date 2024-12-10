@@ -1,0 +1,183 @@
+student_db
+CREATE TABLE students (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- This is the unique identifier for each student
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(100) UNIQUE,
+    dob DATE,
+    gender VARCHAR(10),
+    mobile_number VARCHAR(15)
+);
+
+registration.php
+
+<?php
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "student_db";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $email = $_POST['email'];
+    $dob = $_POST['dob'];
+    $gender = $_POST['gender'];
+    $mobile_number = $_POST['mobile_number'];
+
+    // Insert data into database
+    $sql = "INSERT INTO students (first_name, last_name, email, dob, gender, mobile_number)
+            VALUES ('$first_name', '$last_name', '$email', '$dob', '$gender', '$mobile_number')";
+
+    if ($conn->query($sql) === TRUE) {
+        // Redirect to login page after successful registration
+        echo "Registration successful! Redirecting to login...";
+        header("Location: login2.php");  // Redirect to login.php
+        exit();  // Stop further script execution
+    } else {
+        echo "Error: " . $conn->error;
+    }
+
+    $conn->close();
+}
+?>
+
+registration.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Registration</title>
+</head>
+<body>
+    <h2>Register Student</h2>
+    <form method="POST" action="register.php">
+        <label for="first_name">First Name:</label><br>
+        <input type="text" id="first_name" name="first_name" required><br><br>
+
+        <label for="last_name">Last Name:</label><br>
+        <input type="text" id="last_name" name="last_name" required><br><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="dob">Date of Birth:</label><br>
+        <input type="date" id="dob" name="dob" required><br><br>
+
+        <label>Gender:</label><br>
+        <input type="radio" id="male" name="gender" value="Male" required>
+        <label for="male">Male</label><br>
+        <input type="radio" id="female" name="gender" value="Female" required>
+        <label for="female">Female</label><br><br>
+
+        <label for="mobile_number">Mobile Number:</label><br>
+        <input type="text" id="mobile_number" name="mobile_number" required><br><br>
+
+        <input type="submit" value="Register">
+    </form>
+</body>
+</html>
+
+login.php
+
+<?php
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "student_db";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = $_POST['email'];
+
+    // Query to fetch the user based on email
+    $sql = "SELECT * FROM students WHERE email = '$email'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // Get the user details
+        $row = $result->fetch_assoc();
+       
+        // Set a cookie to remember the user
+        setcookie('student_id', $row['id'], time() + (86400 * 30), "/");  // Cookie for 30 days
+
+        // Redirect to the dashboard page
+        header("Location: dashboard2.php");
+        exit();
+    } else {
+        echo "No user found with that email.";
+    }
+
+    $conn->close();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form method="POST" action="login2.php">
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
+
+dashboard.php
+
+<?php
+// Check if the user is logged in via cookies
+if (!isset($_COOKIE['student_id'])) {
+    echo "Please log in to view your information.";
+    exit();
+}
+
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "student_db";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$student_id = $_COOKIE['student_id'];
+$sql = "SELECT * FROM students WHERE id = '$student_id'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    echo "<h2>Welcome, " . $row['first_name'] . " " . $row['last_name'] . "</h2>";
+    echo "<p>Email: " . $row['email'] . "</p>";
+    echo "<p>Date of Birth: " . $row['dob'] . "</p>";
+    echo "<p>Gender: " . $row['gender'] . "</p>";
+    echo "<p>Mobile Number: " . $row['mobile_number'] . "</p>";
+} else {
+    echo "No user found.";
+}
+
+$conn->close();
+?>
