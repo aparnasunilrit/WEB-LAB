@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($conn->query($sql) === TRUE) {
         // Redirect to login page after successful registration
         echo "Registration successful! Redirecting to login...";
-        header("Location: login2.php");  // Redirect to login.php
+        header("Location: login.php");  // Redirect to login.php
         exit();  // Stop further script execution
     } else {
         echo "Error: " . $conn->error;
