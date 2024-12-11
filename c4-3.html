@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Registration Form</title>
+    <script>
+        function validateForm() {
+            var firstName = document.forms["registrationForm"]["firstName"].value;
+            var lastName = document.forms["registrationForm"]["lastName"].value;
+            var dob = document.forms["registrationForm"]["dob"].value;
+            var email = document.forms["registrationForm"]["email"].value;
+            var gender = document.forms["registrationForm"]["gender"].value;
+            var password = document.forms["registrationForm"]["password"].value;
+
+            if (firstName == "" || lastName == "" || dob == "" || email == "" || gender == "" || password == "") {
+                alert("All fields must be filled out");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h2 style="text-align:center">STUDENT REGISTRATION FORM</h2>
+    <form action="c4-3reg.php" name="registrationForm" method="POST" onsubmit="return validateForm()">
+        <table align="center" border="1" cellpadding="8">
+            <tr>
+                <td>FIRST NAME</td>
+                <td><input type="text" name="firstName" required maxlength="30"></td>
+            </tr>
+            <tr>
+                <td>LAST NAME</td>
+                <td><input type="text" name="lastName" required maxlength="30"></td>
+            </tr>
+            <tr>
+                <td>DATE OF BIRTH</td>
+                <td><input type="date" name="dob" required></td>
+            </tr>
+            <tr>
+                <td>EMAIL-ID</td>
+                <td><input type="email" name="email" required></td>
+            </tr>
+            <tr>
+                <td>GENDER</td>
+                <td><input type="radio" name="gender" value="MALE" required> Male
+                    <input type="radio" name="gender" value="FEMALE" required> Female
+                </td>
+            </tr>
+            <tr>
+                <td>PASSWORD</td>
+                <td><input type="password" name="password" required maxlength="30"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><center><input type="submit" name="submit" value="SUBMIT">&nbsp;<input type="reset"></center></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
