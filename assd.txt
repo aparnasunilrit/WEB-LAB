@@ -1,0 +1,1 @@
+create table students(id int auto_increment primary key,first_name varchar(30),last_name varchar(30),dob date,email varchar(30),mobile varchar(10),gender ENUM('Male','Female'),password varchar(25));
